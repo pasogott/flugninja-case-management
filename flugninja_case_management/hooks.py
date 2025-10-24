@@ -148,23 +148,23 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"flugninja_case_management.tasks.all"
 # 	],
 # 	"daily": [
 # 		"flugninja_case_management.tasks.daily"
 # 	],
-# 	"hourly": [
-# 		"flugninja_case_management.tasks.hourly"
-# 	],
+    "hourly": [
+        "flugninja_case_management.flugninja_case_management.doctype.flight.fetch_refundable_flights.enqueue_fetch_refundable_flights"
+    ]
 # 	"weekly": [
 # 		"flugninja_case_management.tasks.weekly"
 # 	],
 # 	"monthly": [
 # 		"flugninja_case_management.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------

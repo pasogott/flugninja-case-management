@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-22 18:21:10.154064",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "departure_city",
+  "arrival_city",
+  "possible_claim",
+  "flight_number",
+  "flight_status",
+  "airline",
+  "datetime",
+  "flight_date",
+  "posted_on_instagram"
+ ],
+ "fields": [
+  {
+   "fieldname": "departure_city",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Departure City"
+  },
+  {
+   "fieldname": "arrival_city",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Arrival City"
+  },
+  {
+   "fieldname": "possible_claim",
+   "fieldtype": "Currency",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "label": "Possible Claim"
+  },
+  {
+   "fieldname": "flight_number",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Flight Number"
+  },
+  {
+   "fieldname": "flight_status",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Flight Status"
+  },
+  {
+   "fieldname": "airline",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Airline"
+  },
+  {
+   "fieldname": "datetime",
+   "fieldtype": "Datetime",
+   "label": "Datetime"
+  },
+  {
+   "fieldname": "flight_date",
+   "fieldtype": "Date",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Flight Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "posted_on_instagram",
+   "fieldtype": "Check",
+   "label": "posted_on_instagram"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-06-27 10:29:25.398143",
+ "modified_by": "Administrator",
+ "module": "FlugNinja Case Management",
+ "name": "Flight",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FlugNinja Website",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "flight_number",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}

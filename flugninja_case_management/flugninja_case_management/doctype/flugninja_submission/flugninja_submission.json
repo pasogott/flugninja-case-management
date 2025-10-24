@@ -1,0 +1,229 @@
+{
+ "actions": [],
+ "allow_events_in_timeline": 1,
+ "allow_rename": 1,
+ "creation": "2025-05-22 11:59:42.501121",
+ "default_view": "List",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "flightdata_section",
+  "flight_number",
+  "column_break_jikh",
+  "airline",
+  "section_break_uelx",
+  "problem",
+  "submission_datetime",
+  "column_break_pxfm",
+  "delay_in_min",
+  "possible_compensation",
+  "geplante_ankunft_section",
+  "planned_departure_datetime",
+  "departure_airport",
+  "column_break_zxzc",
+  "planned_arrival_datetime",
+  "arrival_airport",
+  "geplanter_abflug_section",
+  "actual_departure_datetime",
+  "column_break_oqgv",
+  "actual_arrival_datetime",
+  "passagiere_section",
+  "column_break_iyco",
+  "persons",
+  "section_break_tatw",
+  "amended_from",
+  "terms_accepted",
+  "privacy_accepted"
+ ],
+ "fields": [
+  {
+   "fieldname": "flightdata_section",
+   "fieldtype": "Section Break",
+   "label": "Flugdaten"
+  },
+  {
+   "fieldname": "flight_number",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Flugnummer"
+  },
+  {
+   "fieldname": "column_break_jikh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "airline",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "label": "Airline - Fluglinie",
+   "options": "Airline"
+  },
+  {
+   "fieldname": "section_break_uelx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "problem",
+   "fieldtype": "Select",
+   "label": "Problem",
+   "options": "cancelled\ndelayed"
+  },
+  {
+   "fieldname": "submission_datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Datum und Uhrzeit der Meldung",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_pxfm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delay_in_min",
+   "fieldtype": "Int",
+   "label": "Versp\u00e4tung in Minuten"
+  },
+  {
+   "fieldname": "possible_compensation",
+   "fieldtype": "Currency",
+   "label": "M\u00f6gliche Entsch\u00e4digung",
+   "non_negative": 1,
+   "options": "EUR"
+  },
+  {
+   "fieldname": "geplante_ankunft_section",
+   "fieldtype": "Section Break",
+   "label": "Geplanter Flug"
+  },
+  {
+   "fieldname": "planned_departure_datetime",
+   "fieldtype": "Datetime",
+   "label": "Geplante Abflugzeit"
+  },
+  {
+   "fieldname": "column_break_zxzc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "planned_arrival_datetime",
+   "fieldtype": "Datetime",
+   "label": "Geplante Ankunftszeit"
+  },
+  {
+   "fieldname": "arrival_airport",
+   "fieldtype": "Data",
+   "label": "Ankunft Flughafen"
+  },
+  {
+   "fieldname": "geplanter_abflug_section",
+   "fieldtype": "Section Break",
+   "label": "Tats\u00e4chlicher Flug"
+  },
+  {
+   "fieldname": "actual_departure_datetime",
+   "fieldtype": "Datetime",
+   "label": "Tats\u00e4chliche Abflugzeit"
+  },
+  {
+   "fieldname": "column_break_oqgv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "actual_arrival_datetime",
+   "fieldtype": "Datetime",
+   "label": "Tats\u00e4chliche Ankunftszeit"
+  },
+  {
+   "fieldname": "passagiere_section",
+   "fieldtype": "Section Break",
+   "label": "Passagiere"
+  },
+  {
+   "fieldname": "column_break_iyco",
+   "fieldtype": "Column Break",
+   "options": "Passenger"
+  },
+  {
+   "fieldname": "section_break_tatw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "FlugNinja Submission",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "departure_airport",
+   "fieldtype": "Data",
+   "label": "Abflug Flughafen"
+  },
+  {
+   "fieldname": "persons",
+   "fieldtype": "Table",
+   "options": "Passenger"
+  },
+  {
+   "default": "0",
+   "fieldname": "terms_accepted",
+   "fieldtype": "Check",
+   "label": "Terms accepted"
+  },
+  {
+   "default": "0",
+   "fieldname": "privacy_accepted",
+   "fieldtype": "Check",
+   "label": "Privacy accepted"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-08-27 12:15:51.573404",
+ "modified_by": "pascal@calumba.at",
+ "module": "FlugNinja Case Management",
+ "name": "FlugNinja Submission",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FlugNinja Website",
+   "share": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}

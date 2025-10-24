@@ -1,0 +1,82 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-22 12:11:55.265476",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "firstname",
+  "column_break_mqoe",
+  "lastname",
+  "birthdate",
+  "kontaktinformationen_section",
+  "email",
+  "column_break_nfhu",
+  "phone"
+ ],
+ "fields": [
+  {
+   "fieldname": "firstname",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Vorname"
+  },
+  {
+   "fieldname": "column_break_mqoe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lastname",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Nachname"
+  },
+  {
+   "fieldname": "birthdate",
+   "fieldtype": "Date",
+   "label": "Geburtstag"
+  },
+  {
+   "fieldname": "kontaktinformationen_section",
+   "fieldtype": "Section Break",
+   "label": "Kontaktinformationen"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "E-Mail",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_nfhu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Telefonnummer",
+   "options": "Phone"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-08-27 12:14:20.763738",
+ "modified_by": "pascal@calumba.at",
+ "module": "FlugNinja Case Management",
+ "name": "Passenger",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}
