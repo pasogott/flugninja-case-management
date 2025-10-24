@@ -149,15 +149,20 @@ app_license = "mit"
 # ---------------
 
 scheduler_events = {
+    "cron": {
+        "17 */6 * * *": [
+            "flugninja_case_management.flugninja_case_management.doctype.flight.fetch_refundable_flights.enqueue_fetch_refundable_flights"
+        ]
+    }
 # 	"all": [
 # 		"flugninja_case_management.tasks.all"
 # 	],
-# 	"daily": [
-# 		"flugninja_case_management.tasks.daily"
+# 	"hourly": [
+# 		"flugninja_case_management.tasks.hourly"
 # 	],
-    "hourly": [
-        "flugninja_case_management.flugninja_case_management.doctype.flight.fetch_refundable_flights.enqueue_fetch_refundable_flights"
-    ]
+#   "daily": [
+#       "flugninja_case_management.tasks.daily"
+#   ]
 # 	"weekly": [
 # 		"flugninja_case_management.tasks.weekly"
 # 	],
