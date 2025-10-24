@@ -1,0 +1,206 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-24 14:51:33.958773",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_reference",
+  "submission",
+  "status",
+  "contract_bundle_is_locked",
+  "section_representative",
+  "representative_firstname",
+  "representative_email",
+  "column_break_ualp",
+  "representative_lastname",
+  "representative_phone",
+  "section_passengers",
+  "passengers",
+  "section_tokens",
+  "abtretung_token",
+  "erfolgsservice_token",
+  "section_signature",
+  "signature_ublh",
+  "selected_variant",
+  "signed_on",
+  "signed_ip",
+  "passenger_snapshot_json",
+  "pdf_abtretung",
+  "pdf_erfolgsservice",
+  "section_break_pogn",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Contract Bundle",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "signature_ublh",
+   "fieldtype": "Signature",
+   "label": "Unterschrift (Bild)"
+  },
+  {
+   "fieldname": "submission",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "FlugNinja Submission",
+   "options": "FlugNinja Submission",
+   "reqd": 1
+  },
+  {
+   "fieldname": "representative_firstname",
+   "fieldtype": "Date",
+   "label": "Vorname"
+  },
+  {
+   "fieldname": "representative_lastname",
+   "fieldtype": "Data",
+   "label": "Nachname"
+  },
+  {
+   "fieldname": "representative_email",
+   "fieldtype": "Data",
+   "label": "E-Mail Adresse",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_ualp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "representative_phone",
+   "fieldtype": "Data",
+   "label": "Telefonnummer",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "section_reference",
+   "fieldtype": "Section Break",
+   "label": "Bezug"
+  },
+  {
+   "fieldname": "section_representative",
+   "fieldtype": "Section Break",
+   "label": "Vertreter"
+  },
+  {
+   "fieldname": "section_passengers",
+   "fieldtype": "Section Break",
+   "label": "Passagiere"
+  },
+  {
+   "fieldname": "passengers",
+   "fieldtype": "Table",
+   "label": "Mitreisende",
+   "options": "Passenger"
+  },
+  {
+   "fieldname": "section_tokens",
+   "fieldtype": "Section Break",
+   "label": "Signatur-Links"
+  },
+  {
+   "fieldname": "abtretung_token",
+   "fieldtype": "Data",
+   "label": "Abtretung Token",
+   "unique": 1
+  },
+  {
+   "fieldname": "erfolgsservice_token",
+   "fieldtype": "Data",
+   "label": "Erfolgsservice Token",
+   "unique": 1
+  },
+  {
+   "fieldname": "section_signature",
+   "fieldtype": "Section Break",
+   "label": "Signatur"
+  },
+  {
+   "fieldname": "section_break_pogn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "selected_variant",
+   "fieldtype": "Select",
+   "label": "Ausgew\u00e4hlte Variante",
+   "options": "abtretung\nerfolgsservice"
+  },
+  {
+   "fieldname": "signed_on",
+   "fieldtype": "Datetime",
+   "label": "Unterschrieben am"
+  },
+  {
+   "fieldname": "signed_ip",
+   "fieldtype": "Data",
+   "label": "IP-Adresse"
+  },
+  {
+   "fieldname": "passenger_snapshot_json",
+   "fieldtype": "Long Text",
+   "label": "Passagier-Snapshot (JSON)"
+  },
+  {
+   "fieldname": "pdf_abtretung",
+   "fieldtype": "Attach",
+   "label": "Abtretung PDF (signiert)"
+  },
+  {
+   "fieldname": "pdf_erfolgsservice",
+   "fieldtype": "Attach",
+   "label": "Erfolgsservice PDF (signiert)"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nAbtretung unterschrieben\nErfolgsservice unterschrieben",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "contract_bundle_is_locked",
+   "fieldtype": "Check",
+   "label": "Gesperrt (bereits unterschrieben)",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-10-24 15:18:55.943662",
+ "modified_by": "Administrator",
+ "module": "FlugNinja Case Management",
+ "name": "Contract Bundle",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

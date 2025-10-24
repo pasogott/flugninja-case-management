@@ -187,9 +187,14 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-08-27 12:15:51.573404",
- "modified_by": "pascal@calumba.at",
+ "links": [
+  {
+   "link_doctype": "Contract Bundle",
+   "link_fieldname": "submission"
+  }
+ ],
+ "modified": "2025-10-24 15:18:44.915135",
+ "modified_by": "Administrator",
  "module": "FlugNinja Case Management",
  "name": "FlugNinja Submission",
  "owner": "Administrator",

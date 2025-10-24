@@ -1,0 +1,174 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "CON-.YYYY.-.#####",
+ "creation": "2025-10-24 13:03:11.228361",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_mmg6",
+  "amended_from",
+  "contract_type",
+  "linked_submission",
+  "contract_partner_section",
+  "passenger_name",
+  "email",
+  "flight_data_section",
+  "flight_number",
+  "airline",
+  "departure_airport",
+  "arrival_airport",
+  "contract_data_section",
+  "contract_date",
+  "possible_compensation",
+  "contract_status",
+  "generated_pdf",
+  "confirmation_link",
+  "signed_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mmg6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Assignment Contract",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "contract_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Vertragstyp",
+   "options": "Sofortauszahlung\nErfolgsmodell",
+   "reqd": 1
+  },
+  {
+   "fieldname": "linked_submission",
+   "fieldtype": "Link",
+   "label": "FlugNinja Submission",
+   "options": "FlugNinja Submission",
+   "reqd": 1
+  },
+  {
+   "fieldname": "passenger_name",
+   "fieldtype": "Data",
+   "label": "Name des Passagiers"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "E-Mail-Adresse"
+  },
+  {
+   "fieldname": "airline",
+   "fieldtype": "Data",
+   "label": "Airline"
+  },
+  {
+   "fieldname": "flight_number",
+   "fieldtype": "Data",
+   "label": "Flugnummer"
+  },
+  {
+   "fieldname": "departure_airport",
+   "fieldtype": "Data",
+   "label": "Abflug Flughafen"
+  },
+  {
+   "fieldname": "flight_data_section",
+   "fieldtype": "Section Break",
+   "label": "Flugdaten"
+  },
+  {
+   "fieldname": "arrival_airport",
+   "fieldtype": "Data",
+   "label": "Ankunft Flughafen"
+  },
+  {
+   "fieldname": "possible_compensation",
+   "fieldtype": "Currency",
+   "label": "M\u00f6gliche Entsch\u00e4digung (EUR)",
+   "non_negative": 1,
+   "options": "EUR",
+   "precision": "0",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "contract_date",
+   "fieldtype": "Date",
+   "label": "Vertragsdatum"
+  },
+  {
+   "fieldname": "contract_data_section",
+   "fieldtype": "Section Break",
+   "label": "Vertragsdaten"
+  },
+  {
+   "default": "Entwurf",
+   "fieldname": "contract_status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Entwurf\nVerschickt\nSigniert\nAbgelehnt"
+  },
+  {
+   "fieldname": "generated_pdf",
+   "fieldtype": "Attach",
+   "label": "PDF Vertrag"
+  },
+  {
+   "fieldname": "confirmation_link",
+   "fieldtype": "Data",
+   "label": "Best\u00e4tigungs-Link"
+  },
+  {
+   "fieldname": "signed_on",
+   "fieldtype": "Datetime",
+   "label": "Signiert am"
+  },
+  {
+   "fieldname": "contract_partner_section",
+   "fieldtype": "Section Break",
+   "label": "Vertragspartner"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-10-24 13:12:42.272540",
+ "modified_by": "Administrator",
+ "module": "FlugNinja Case Management",
+ "name": "Assignment Contract",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}
