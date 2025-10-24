@@ -3,6 +3,7 @@
 # flugninja_case_management/doctype/flight/fetch_refundable_flights.py
 
 from __future__ import annotations
+from time import perf_counter
 import time
 import random
 import json
@@ -14,6 +15,61 @@ import requests
 import frappe
 
 BASE_URL = "https://myflyright.com/get-current-flight-incidents/"
+# ---------- Notification mit Raven ----------
+
+RAVEN_BOT_NAME = "flugninja"       # Name deines Raven Bots
+RAVEN_CHANNEL_ID = "flight-alerts" # Channel-Name/-ID in Raven
+
+# Helper: Channel-Referenz (Name oder #alias) -> echte Docname-ID auflösen
+def _get_raven_channel_id(ref: str) -> str:
+    """Gibt den Docname einer Raven Channel-Instanz zurück.
+    ref darf 'name' (Docname) oder 'channel_name' oder '#channel_name' sein.
+    """
+    if not ref:
+        raise frappe.ValidationError("Channel reference is empty")
+
+    ref = ref.strip()
+    if ref.startswith("#"):
+        ref = ref[1:]
+
+    # 1) Treffer als Docname?
+    name = frappe.db.exists("Raven Channel", ref)
+    if name:
+        return name
+
+    # 2) Treffer über das Feld 'channel_name'?
+    name = frappe.db.get_value("Raven Channel", {"channel_name": ref}, "name")
+    if name:
+        return name
+
+    raise frappe.LinkValidationError(f"Raven Channel not found: {ref}")
+
+def _send_raven_summary(stats: Dict[str, Any]) -> None:
+    """Postet eine Markdown-Zusammenfassung in Raven."""
+    try:
+        bot = frappe.get_doc("Raven Bot", RAVEN_BOT_NAME)
+        channel_id = _get_raven_channel_id(RAVEN_CHANNEL_ID)
+        # hübsches Markdown
+        md = (
+            f"## ✈️ Flight Import Summary\n"
+            f"**Run:** {stats['started_at']} → {stats['ended_at']}  \n"
+            f"**Duration:** {stats['duration_seconds']:.1f}s  \n"
+            f"\n"
+            f"- **API total_count:** {stats['api_total_count']}  \n"
+            f"- **Pages processed:** {stats['pages']}  \n"
+            f"- **Flights fetched:** {stats['fetched']}  \n"
+            f"- **Created:** {stats['created']}  \n"
+            f"- **Duplicates skipped:** {stats['duplicates']}  \n"
+            f"- **Failed:** {stats['failed']}  \n"
+        )
+
+        bot.send_message(
+            channel_id=channel_id,
+            text=md,
+            markdown=True
+        )
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "raven_summary_failed")
 
 # ---------- Helpers (Frappe ORM) ----------
 
@@ -104,43 +160,78 @@ def fetch_flights_raw(offset: int) -> Dict[str, Any]:
 # ---------- Orchestrierung ----------
 
 def fetch_refundable_flights():
-    """Batch-Import: zieht Seitenweise, legt neue Flüge an (intern via Frappe ORM)."""
+    """Batch-Import: zieht seitenweise, legt neue Flüge an (intern via Frappe ORM) und schickt am Ende eine Raven-Zusammenfassung."""
+    start_perf = perf_counter()
+
+    # Stats
+    stats = {
+        "api_total_count": None,
+        "pages": 0,
+        "fetched": 0,
+        "created": 0,
+        "duplicates": 0,
+        "failed": 0,
+        "started_at": frappe.utils.now(),  # server time
+        "ended_at": None,
+        "duration_seconds": 0.0,
+    }
+
     offset = 0
     page_size = 50
     max_empty_pages = 3
     empty_pages = 0
     total_count = None
 
-    while True:
-        time.sleep(random.uniform(1.0, 2.5))
-        response = fetch_flights_raw(offset=offset)
+    try:
+        while True:
+            time.sleep(random.uniform(1.0, 2.5))
+            response = fetch_flights_raw(offset=offset)
 
-        if not response or "flights" not in response:
-            empty_pages += 1
-            frappe.logger().info(f"Empty page @ {offset} ({empty_pages}/{max_empty_pages})")
-            if empty_pages >= max_empty_pages:
-                frappe.logger().info("Stop: too many empty pages.")
-                break
+            if not response or "flights" not in response:
+                empty_pages += 1
+                frappe.logger().info(f"Empty page @ {offset} ({empty_pages}/{max_empty_pages})")
+                if empty_pages >= max_empty_pages:
+                    frappe.logger().info("Stop: too many empty pages.")
+                    break
+                offset += page_size
+                continue
+
+            flights = response.get("flights") or []
+            stats["pages"] += 1
+            stats["fetched"] += len(flights)
+
+            if total_count is None:
+                total_count = int(response.get("count") or 0)
+                stats["api_total_count"] = total_count
+                frappe.logger().info(f"Found total {total_count} flights.")
+
+            frappe.logger().info(f"Process page offset {offset} ({len(flights)} flights)")
+            for flight in flights:
+                try:
+                    if check_flight_exists(flight):
+                        stats["duplicates"] += 1
+                        continue
+
+                    name = create_flight(flight)
+                    if name:
+                        stats["created"] += 1
+                    else:
+                        # create_flight hat geloggt; hier zählen wir als failed
+                        stats["failed"] += 1
+                except Exception:
+                    stats["failed"] += 1
+                    frappe.log_error(frappe.get_traceback(), "process_single_flight failed")
+
             offset += page_size
-            continue
+            if total_count and offset >= total_count:
+                frappe.logger().info("All flights processed.")
+                break
+    finally:
+        # Ende/Duration + Raven-Report
+        stats["ended_at"] = frappe.utils.now()
+        stats["duration_seconds"] = perf_counter() - start_perf
+        _send_raven_summary(stats)
 
-        flights = response.get("flights") or []
-        if total_count is None:
-            total_count = int(response.get("count") or 0)
-            frappe.logger().info(f"Found total {total_count} flights.")
-
-        frappe.logger().info(f"Process page offset {offset} ({len(flights)} flights)")
-        for flight in flights:
-            try:
-                if not check_flight_exists(flight):
-                    create_flight(flight)
-            except Exception:
-                frappe.log_error(frappe.get_traceback(), "process_single_flight failed")
-
-        offset += page_size
-        if total_count and offset >= total_count:
-            frappe.logger().info("All flights processed.")
-            break
 
 
 # ---------- Public API (optional aus Client/Scheduler aufrufen) ----------
