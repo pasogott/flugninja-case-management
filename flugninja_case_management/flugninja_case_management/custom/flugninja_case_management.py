@@ -127,19 +127,6 @@ def sign_contract(contract_name, signee, ip_address):
     for oc in other_contracts:
         frappe.db.set_value("Contract", oc.name, "status", "Inactive")
 
-# def resend_contract_links(contract_name):
-#     contract = frappe.get_doc("Contract", contract_name)
-#     if contract.status != "Unsigned":
-#         frappe.throw("Cannot resend links for a signed or inactive contract.")
-#     submission = frappe.get_doc("FlugNinja Submission", contract.submission)
-#     contract.sign_token = frappe.generate_hash(length=32)
-#     contract.sign_url = f"{get_url()}/sign-contract?token={contract.sign_token}&name={contract.name}"
-#     contract.sent_at = now_datetime()
-#     contract.expires_at = add_days(now_datetime(), 7)
-#     contract.save()
-#     send_contract_email(submission, contract, contract)
-
-
 @frappe.whitelist()
 def resend_contract_links(submission_name):
     """
@@ -248,70 +235,3 @@ def resend_contract_links(submission_name):
         "success": True,
         "message": "Contract links resent successfully"
     }
-
-# @frappe.whitelist()
-# def resend_contract_links(submission_name):
-#     """
-#     Resend contract links for a FlugNinja Submission
-#     This function will:
-#     1. Fetch both unsigned contracts
-#     2. Regenerate tokens and URLs
-#     3. Extend expiry dates
-#     4. Resend email to representative
-#     """
-#     # Get submission document
-#     submission = frappe.get_doc("FlugNinja Submission", submission_name)
-    
-#     # Get all unsigned contracts for this submission
-#     unsigned_contracts = frappe.get_all(
-#         "Contract",
-#         filters={
-#             "custom_flugninja_reference": submission_name,
-#             "status": "Unsigned"
-#         },
-#         fields=["name", "custom_contract_type"]
-#     )
-    
-#     if not unsigned_contracts:
-#         frappe.throw("No unsigned contracts found for this submission.")
-    
-#     if len(unsigned_contracts) != 2:
-#         frappe.throw(f"Expected 2 unsigned contracts, found {len(unsigned_contracts)}. Please check contract status.")
-    
-#     # Separate contracts by type
-#     assignment_contract = None
-#     success_fee_contract = None
-    
-#     for contract_info in unsigned_contracts:
-#         contract = frappe.get_doc("Contract", contract_info.name)
-        
-#         # Regenerate token and URL
-#         contract.custom_sign_token = frappe.generate_hash(length=32)
-#         base_url = get_url()
-#         contract.custom_sign_url = (
-#             f"{base_url}/contract-details?name={contract.name}&token={contract.custom_sign_token}"
-#         )
-        
-#         # Update sent and expiry dates
-#         contract.custom_sent_at = now_datetime()
-#         contract.custom_expires_at = add_days(now_datetime(), 7)
-#         contract.save()
-        
-#         # Identify contract type
-#         if contract.custom_contract_type == "Assignment":
-#             assignment_contract = contract
-#         elif contract.custom_contract_type == "Success Fee":
-#             success_fee_contract = contract
-    
-#     if not assignment_contract or not success_fee_contract:
-#         frappe.throw("Could not find both Assignment and Success Fee contracts.")
-    
-#     # Resend email
-#     send_contract_email(submission, assignment_contract, success_fee_contract)
-    
-#     frappe.msgprint(f"Contract links have been resent to {submission.persons[0].email}")
-    
-#     return {
-#         "success": True,
-#         "message": "Contract links resent successfully"
-#     }

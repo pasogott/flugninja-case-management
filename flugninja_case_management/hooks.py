@@ -162,12 +162,12 @@ scheduler_events = {
     "cron": {
         "17 */6 * * *": [
             "flugninja_case_management.flugninja_case_management.doctype.flight.fetch_refundable_flights.enqueue_fetch_refundable_flights"
-        ],
-        
+        ]
+    },
+    
     "hourly": [
         "flugninja_case_management.flugninja_case_management.custom.custom_jobs.check_and_expire_contract_urls"
     ],
-    }
 # 	"all": [
 # 		"flugninja_case_management.tasks.all"
 # 	],
