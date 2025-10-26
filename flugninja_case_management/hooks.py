@@ -136,7 +136,13 @@ app_license = "mit"
 # Document Events
 # ---------------
 # Hook on document methods and events
+# Route for the custom page
+website_route_rules = [
+    {"from_route": "/custom_page", "to_route": "custom_page"},
+]
 
+# Include CSS file
+app_include_css = "/assets/flugninja_case_management/css/custom_page.css"
 # doc_events = {
 # 	"*": {
 # 		"on_update": "method",
@@ -144,15 +150,23 @@ app_license = "mit"
 # 		"on_trash": "method"
 # 	}
 # }
-
+doc_events = {
+    "FlugNinja Submission": {
+        "on_submit": "flugninja_case_management.flugninja_case_management.custom.flugninja_case_management.create_contracts"
+    }
+}
 # Scheduled Tasks
 # ---------------
-
+# flugninja_case_management.flugninja_case_management.custom.custom_jobs.check_and_expire_contract_urls
 scheduler_events = {
     "cron": {
         "17 */6 * * *": [
             "flugninja_case_management.flugninja_case_management.doctype.flight.fetch_refundable_flights.enqueue_fetch_refundable_flights"
-        ]
+        ],
+        
+    "hourly": [
+        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.check_and_expire_contract_urls"
+    ],
     }
 # 	"all": [
 # 		"flugninja_case_management.tasks.all"

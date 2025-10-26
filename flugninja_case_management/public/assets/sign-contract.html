@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Contract - FlugNinja</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { padding: 20px; }
+        .contract-details { margin-bottom: 20px; }
+        .signature-pad { border: 1px solid #ccc; width: 100%; height: 200px; }
+        #error-message { display: none; color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>✈️ FlugNinja Contract Signing</h3>
+        <div id="error-message" class="alert alert-danger"></div>
+        <div id="contract-form" style="display: none;">
+            <div class="contract-details">
+                <h4>Contract Details</h4>
+                <p><strong>Contract Type:</strong> <span id="contract-type"></span></p>
+                <p><strong>Party Name:</strong> <span id="party-name"></span></p>
+                <p><strong>Sent At:</strong> <span id="sent-at"></span></p>
+                <p><strong>Expires At:</strong> <span id="expires-at"></span></p>
+                <p><strong>FlugNinja Reference:</strong> <span id="flugninja-reference"></span></p>
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Contract Terms</h5>
+                        <div id="contract-terms"></div>
+                    </div>
+                </div>
+            </div>
+            <form id="sign-form">
+                <div class="mb-3">
+                    <label for="signee" class="form-label">Your Name</label>
+                    <input type="text" class="form-control" id="signee" required>
+                </div>
+                <div class="mb-3">
+                    <label for="signature-pad" class="form-label">Signature</label>
+                    <canvas id="signature-pad" class="signature-pad"></canvas>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Contract</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Get token and contract name from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const contractName = urlParams.get('name');
+
+            if (!token || !contractName) {
+                $('#error-message').text('Invalid link. Please contact support@flugninja.at.').show();
+                return;
+            }
+
+            // Fetch contract details from Frappe API
+            $.ajax({
+                url: '/api/method/frappe.client.get',
+                method: 'POST',
+                data: {
+                    doctype: 'Contract',
+                    name: contractName,
+                    filters: JSON.stringify({ custom_sign_token: token })
+                },
+                success: function(response) {
+                    if (!response.message) {
+                        $('#error-message').text('Invalid or expired link.').show();
+                        return;
+                    }
+                    const contract = response.message;
+                    if (contract.is_signed) {
+                        $('#error-message').text('This contract has already been signed.').show();
+                        return;
+                    }
+                    if (new Date(contract.custom_expires_at) < new Date()) {
+                        $('#error-message').text('This link has expired. Please contact support@flugninja.at.').show();
+                        return;
+                    }
+
+                    // Populate form with contract details
+                    $('#contract-type').text(contract.custom_contract_type);
+                    $('#party-name').text(contract.party_name);
+                    $('#sent-at').text(new Date(contract.custom_sent_at).toLocaleString());
+                    $('#expires-at').text(new Date(contract.custom_expires_at).toLocaleString());
+                    $('#flugninja-reference').text(contract.custom_flugninja_reference);
+                    $('#contract-terms').html(contract.contract_terms);
+                    $('#contract-form').show();
+                },
+                error: function() {
+                    $('#error-message').text('Error loading contract details.').show();
+                }
+            });
+
+            // Initialize Signature Pad
+            const canvas = document.getElementById('signature-pad');
+            const signaturePad = new SignaturePad(canvas);
+
+            // Handle form submission
+            $('#sign-form').submit(function(e) {
+                e.preventDefault();
+                const signee = $('#signee').val();
+                const signatureData = signaturePad.toDataURL();
+
+                if (!signee || signaturePad.isEmpty()) {
+                    $('#error-message').text('Please provide your name and signature.').show();
+                    return;
+                }
+
+                // Call server to sign contract
+                $.ajax({
+                    url: '/api/method/flugninja_case_management.custom.sign_contract',
+                    method: 'POST',
+                    data: {
+                        contract_name: contractName,
+                        signee: signee,
+                        ip_address: '0.0.0.0', // Frappe will override with actual IP
+                        signature_data: signatureData
+                    },
+                    success: function(response) {
+                        $('#error-message').removeClass('alert-danger').addClass('alert-success').text('Contract signed successfully!').show();
+                        $('#sign-form').hide();
+                    },
+                    error: function(xhr) {
+                        $('#error-message').text(xhr.responseJSON?.message || 'Error signing contract.').show();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

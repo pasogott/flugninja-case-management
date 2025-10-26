@@ -30,6 +30,9 @@
   "passagiere_section",
   "column_break_iyco",
   "persons",
+  "representative_firstname",
+  "representative_email",
+  "representative_contact",
   "section_break_tatw",
   "amended_from",
   "terms_accepted",
@@ -75,7 +78,6 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Datum und Uhrzeit der Meldung",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -182,6 +184,21 @@
    "fieldname": "privacy_accepted",
    "fieldtype": "Check",
    "label": "Privacy accepted"
+  },
+  {
+   "fieldname": "representative_firstname",
+   "fieldtype": "Data",
+   "label": "Representative Firstname"
+  },
+  {
+   "fieldname": "representative_email",
+   "fieldtype": "Data",
+   "label": "Representative Email"
+  },
+  {
+   "fieldname": "representative_contact",
+   "fieldtype": "Data",
+   "label": "Representative Contact"
   }
  ],
  "grid_page_length": 50,
@@ -189,11 +206,11 @@
  "is_submittable": 1,
  "links": [
   {
-   "link_doctype": "Contract Bundle",
-   "link_fieldname": "submission"
+   "link_doctype": "Contract",
+   "link_fieldname": "custom_flugninja_reference"
   }
  ],
- "modified": "2025-10-24 15:18:44.915135",
+ "modified": "2025-10-26 18:04:49.044052",
  "modified_by": "Administrator",
  "module": "FlugNinja Case Management",
  "name": "FlugNinja Submission",
