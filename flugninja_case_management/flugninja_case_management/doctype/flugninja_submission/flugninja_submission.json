@@ -36,7 +36,9 @@
   "section_break_tatw",
   "amended_from",
   "terms_accepted",
-  "privacy_accepted"
+  "privacy_accepted",
+  "assignment_url",
+  "fee_url"
  ],
  "fields": [
   {
@@ -199,6 +201,18 @@
    "fieldname": "representative_contact",
    "fieldtype": "Data",
    "label": "Representative Contact"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "assignment_url",
+   "fieldtype": "Data",
+   "label": "Assignment URL"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "fee_url",
+   "fieldtype": "Data",
+   "label": "Fee URL"
   }
  ],
  "grid_page_length": 50,
@@ -210,8 +224,8 @@
    "link_fieldname": "custom_flugninja_reference"
   }
  ],
- "modified": "2025-10-26 18:04:49.044052",
- "modified_by": "Administrator",
+ "modified": "2025-10-29 08:05:11.470336",
+ "modified_by": "naqeeb@calumba.at",
  "module": "FlugNinja Case Management",
  "name": "FlugNinja Submission",
  "owner": "Administrator",

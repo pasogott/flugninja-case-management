@@ -152,7 +152,7 @@ app_include_css = "/assets/flugninja_case_management/css/custom_page.css"
 # }
 doc_events = {
     "FlugNinja Submission": {
-        "on_submit": "flugninja_case_management.flugninja_case_management.custom.flugninja_case_management.create_contracts"
+        "before_submit": "flugninja_case_management.flugninja_case_management.custom.flugninja_case_management.create_contracts"
     }
 }
 # Scheduled Tasks
@@ -166,7 +166,8 @@ scheduler_events = {
     },
     
     "hourly": [
-        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.check_and_expire_contract_urls"
+        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.check_and_expire_contract_urls",
+        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.send_contract_reminders"
     ],
 # 	"all": [
 # 		"flugninja_case_management.tasks.all"

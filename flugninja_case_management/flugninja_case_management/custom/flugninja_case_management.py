@@ -7,12 +7,12 @@ def create_contracts(doc, method):
     for person in doc.persons:
         representative = person
         break  # Assuming first person is the representative
-
+    
     if not representative:
         frappe.throw("No representative found in Passenger table.")
-
+    
     base_url = get_url()
-
+    
     # ----------------------------
     # ASSIGNMENT CONTRACT
     # ----------------------------
@@ -34,13 +34,15 @@ def create_contracts(doc, method):
         "custom_flugninja_reference": doc.name
     })
     assignment_contract.insert()
-
-    # ✅ Unique public + secure URL (with name + token)
-    assignment_contract.custom_sign_url = (
-        f"{base_url}/contract-details?name={assignment_contract.name}&token={assignment_contract.custom_sign_token}"
+    
+    # Generate Assignment URL
+    assignment_url = (
+        # f"{base_url}/contract-details?name={assignment_contract.name}&token={assignment_contract.custom_sign_token}"
+        f"{base_url}/contract-details?token={assignment_contract.custom_sign_token}"
     )
+    assignment_contract.custom_sign_url = assignment_url
     assignment_contract.save()
-
+    
     # ----------------------------
     # SUCCESS FEE CONTRACT
     # ----------------------------
@@ -62,16 +64,23 @@ def create_contracts(doc, method):
         "custom_flugninja_reference": doc.name
     })
     success_fee_contract.insert()
-
-    # ✅ Unique public + secure URL (with name + token)
-    success_fee_contract.custom_sign_url = (
-        f"{base_url}/contract-details?name={success_fee_contract.name}&token={success_fee_contract.custom_sign_token}"
+    
+    # Generate Success Fee URL
+    success_fee_url = (
+        # f"{base_url}/contract-details?name={success_fee_contract.name}&token={success_fee_contract.custom_sign_token}"
+        f"{base_url}/contract-details?token={success_fee_contract.custom_sign_token}"
     )
+    success_fee_contract.custom_sign_url = success_fee_url
     success_fee_contract.save()
-
+    
+    # Store URLs back in FlugNinja Submission
+    doc.assignment_url = assignment_url
+    doc.fee_url = success_fee_url
+    
+    
     # Send email with signing links
     send_contract_email(doc, assignment_contract, success_fee_contract)
-
+    
 def send_contract_email(submission, assignment_contract, success_fee_contract):
     # Get representative details from first person
     representative = submission.persons[0] if submission.persons else None
@@ -211,7 +220,8 @@ def resend_contract_links(submission_name):
     # Update Assignment Contract
     assignment_contract.custom_sign_token = frappe.generate_hash(length=32)
     assignment_contract.custom_sign_url = (
-        f"{base_url}/contract-details?name={assignment_contract.name}&token={assignment_contract.custom_sign_token}"
+        # f"{base_url}/contract-details?name={assignment_contract.name}&token={assignment_contract.custom_sign_token}"
+        f"{base_url}/contract-details?token={assignment_contract.custom_sign_token}"
     )
     assignment_contract.custom_sent_at = now_datetime()
     assignment_contract.custom_expires_at = add_days(now_datetime(), 7)
@@ -220,7 +230,8 @@ def resend_contract_links(submission_name):
     # Update Success Fee Contract
     success_fee_contract.custom_sign_token = frappe.generate_hash(length=32)
     success_fee_contract.custom_sign_url = (
-        f"{base_url}/contract-details?name={success_fee_contract.name}&token={success_fee_contract.custom_sign_token}"
+        # f"{base_url}/contract-details?name={success_fee_contract.name}&token={success_fee_contract.custom_sign_token}"
+        f"{base_url}/contract-details?token={success_fee_contract.custom_sign_token}"
     )
     success_fee_contract.custom_sent_at = now_datetime()
     success_fee_contract.custom_expires_at = add_days(now_datetime(), 7)
@@ -235,3 +246,5 @@ def resend_contract_links(submission_name):
         "success": True,
         "message": "Contract links resent successfully"
     }
+
+
