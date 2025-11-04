@@ -101,13 +101,13 @@ def get_contracts(contract_name=None, token=None):
     Public API to fetch a specific contract using name + token validation
     """
     try:
-        if not contract_name or not token:
-            return {"error": "Contract name and token are required"}
+        # if not contract_name or not token:
+        #     return {"error": "Contract name and token are required"}
 
         contracts = frappe.get_all(
             "Contract",
             filters={
-                "name": contract_name,
+                # "name": contract_name,
                 "custom_sign_token": token,
                 "custom_url_expired": 0
             },
@@ -157,18 +157,19 @@ def get_contracts(contract_name=None, token=None):
         return {"error": str(e)}
     
 @frappe.whitelist(allow_guest=True)
-def submit_signature(contract_name, token, signature):
+def submit_signature(contract_name = None, token = None, signature= None):
     """
     Save digital signature to Contract Doctype in custom_signature field (Attach Image)
     """
     try:
-        if not contract_name or not token or not signature:
-            return {"error": "Missing required parameters"}
+        # if not contract_name or not token or not signature:
+        #     return {"error": "Missing required parameters"}
 
         # Validate contract and token
         contract = frappe.get_value(
             "Contract",
-            {"name": contract_name, "custom_sign_token": token},
+            # {"name": contract_name, "custom_sign_token": token},
+            {"custom_sign_token": token},
             ["name"]
         )
         if not contract:
@@ -184,7 +185,8 @@ def submit_signature(contract_name, token, signature):
         image_data = base64.b64decode(base64_string)
 
         # Generate a unique filename
-        filename = f"signature_{contract_name}_{frappe.utils.now_datetime().strftime('%Y%m%d_%H%M%S')}.png"
+        # filename = f"signature_{contract_name}_{frappe.utils.now_datetime().strftime('%Y%m%d_%H%M%S')}.png"
+        filename = f"signature_{contract}_{frappe.utils.now_datetime().strftime('%Y%m%d_%H%M%S')}.png"
         file_path = os.path.join(get_files_path(), filename)
 
         # Save the image
@@ -198,7 +200,8 @@ def submit_signature(contract_name, token, signature):
             "file_url": f"/files/{filename}",
             "is_private": 1,
             "attached_to_doctype": "Contract",
-            "attached_to_name": contract_name,
+            # "attached_to_name": contract_name,
+            "attached_to_name": contract,
             "content": image_data,
         })
         file_doc.save(ignore_permissions=True)
@@ -218,7 +221,8 @@ def submit_signature(contract_name, token, signature):
                 "Contract",
                 filters={
                     "custom_flugninja_reference": custom_flugninja_reference,
-                    "name": ["!=", contract_name],  # Exclude the current signed contract
+                    # "name": ["!=", contract_name],  # Exclude the current signed contract
+                    "name": ["!=", contract],
                     "custom_sign_token": ["!=", token]
                 },
                 fields=["name"]

@@ -88,7 +88,10 @@ def send_contract_email(submission, assignment_contract, success_fee_contract):
     if not representative:
         frappe.throw("No representative found to send email.")
     
-    email_template = frappe.get_doc("Email Template", "FlugNinja Contract Options")
+
+    # email_template = frappe.get_doc("Email Template", "FlugNinja Contract Options")
+    email_template = frappe.get_doc("Email Template", "Flugninja contracts email")
+    
     email_content = frappe.render_template(
         email_template.response_html,
         {
