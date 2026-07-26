@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-09 12:37:34.268368",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "display_phone_number",
+  "phone_number_id",
+  "profile_name",
+  "conversation_id",
+  "message_data_section",
+  "from",
+  "to",
+  "message_id",
+  "message_status",
+  "content_type",
+  "message_timestamp",
+  "message_text",
+  "attach",
+  "is_reply",
+  "reply_to_message_id"
+ ],
+ "fields": [
+  {
+   "fieldname": "display_phone_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "display_phone_number",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "phone_number_id",
+   "fieldtype": "Data",
+   "label": "phone_number_id",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "message_data_section",
+   "fieldtype": "Section Break",
+   "label": "Message Data"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Data",
+   "label": "From",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "message_id",
+   "fieldtype": "Data",
+   "label": "Message ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "message_timestamp",
+   "fieldtype": "Int",
+   "label": "message_timestamp",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "message_text",
+   "fieldtype": "Long Text",
+   "label": "message_text"
+  },
+  {
+   "fieldname": "message_status",
+   "fieldtype": "Data",
+   "label": "message_status"
+  },
+  {
+   "fieldname": "profile_name",
+   "fieldtype": "Data",
+   "label": "Profile Name"
+  },
+  {
+   "fieldname": "conversation_id",
+   "fieldtype": "Data",
+   "label": "Conversation ID"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Data",
+   "label": "To",
+   "non_negative": 1
+  },
+  {
+   "depends_on": "eval:(doc.content_type =='audio' || doc.content_type =='video' || doc.content_type =='document' || doc.content_type =='image')",
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "label": "Attach"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_reply",
+   "fieldtype": "Check",
+   "label": "Is Reply"
+  },
+  {
+   "fieldname": "reply_to_message_id",
+   "fieldtype": "Data",
+   "label": "Reply To Message ID"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "content_type",
+   "fieldtype": "Select",
+   "label": "Content Type",
+   "options": "text\ndocument\nimage\nvideo\naudio\nflow\nreaction\nlocation\ncontact\nbutton",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-11-09 12:54:10.729986",
+ "modified_by": "Administrator",
+ "module": "FlugNinja Case Management",
+ "name": "FlugNinja Whatsapp Message",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

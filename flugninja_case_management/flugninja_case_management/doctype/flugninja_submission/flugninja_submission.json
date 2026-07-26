@@ -33,12 +33,24 @@
   "representative_firstname",
   "representative_email",
   "representative_contact",
+  "payout_section",
+  "account_holder",
+  "column_break_payout",
+  "iban",
+  "payout_status",
+  "bank_details_completed_at",
+  "payout_completed_at",
+  "payout_notification_sent_at",
+  "review_request_sent_at",
   "section_break_tatw",
   "amended_from",
+  "session_id",
   "terms_accepted",
+  "privacy_acknowledged",
   "privacy_accepted",
   "assignment_url",
-  "fee_url"
+  "whatsapp_optin",
+  "whatsapp_optin_datetime_utc"
  ],
  "fields": [
   {
@@ -176,6 +188,14 @@
    "options": "Passenger"
   },
   {
+   "fieldname": "session_id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Session ID",
+   "search_index": 1,
+   "unique": 1
+  },
+  {
    "default": "0",
    "fieldname": "terms_accepted",
    "fieldtype": "Check",
@@ -183,9 +203,16 @@
   },
   {
    "default": "0",
+   "fieldname": "privacy_acknowledged",
+   "fieldtype": "Check",
+   "label": "Privacy Acknowledged"
+  },
+  {
+   "default": "0",
    "fieldname": "privacy_accepted",
    "fieldtype": "Check",
-   "label": "Privacy accepted"
+   "label": "Privacy Accepted (Legacy)",
+   "hidden": 1
   },
   {
    "fieldname": "representative_firstname",
@@ -209,10 +236,72 @@
    "label": "Assignment URL"
   },
   {
+   "default": "0",
+   "fieldname": "whatsapp_optin",
+   "fieldtype": "Check",
+   "label": "Whatsapp OptIn"
+  },
+  {
+   "fieldname": "whatsapp_optin_datetime_utc",
+   "fieldtype": "Datetime",
+   "label": "Whatsapp OptIn Datetime (UTC)"
+  },
+  {
+   "fieldname": "payout_section",
+   "fieldtype": "Section Break",
+   "label": "Auszahlung"
+  },
+  {
    "allow_on_submit": 1,
-   "fieldname": "fee_url",
+   "fieldname": "account_holder",
    "fieldtype": "Data",
-   "label": "Fee URL"
+   "label": "Kontoinhaber"
+  },
+  {
+   "fieldname": "column_break_payout",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "iban",
+   "fieldtype": "Data",
+   "label": "IBAN"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "awaiting_signature",
+   "fieldname": "payout_status",
+   "fieldtype": "Select",
+   "label": "Auszahlungsstatus",
+   "options": "awaiting_signature\nawaiting_bank_details\nready_for_payout\npaid"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "bank_details_completed_at",
+   "fieldtype": "Datetime",
+   "label": "Kontodaten vollst\u00e4ndig am",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "payout_completed_at",
+   "fieldtype": "Datetime",
+   "label": "Auszahlung durchgef\u00fchrt am",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "payout_notification_sent_at",
+   "fieldtype": "Datetime",
+   "label": "Auszahlungs-E-Mail gesendet am",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "review_request_sent_at",
+   "fieldtype": "Datetime",
+   "label": "Bewertungsanfrage gesendet am",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -224,8 +313,8 @@
    "link_fieldname": "custom_flugninja_reference"
   }
  ],
- "modified": "2025-10-29 08:05:11.470336",
- "modified_by": "naqeeb@calumba.at",
+ "modified": "2026-01-15 10:56:07.191571",
+ "modified_by": "frappeuser",
  "module": "FlugNinja Case Management",
  "name": "FlugNinja Submission",
  "owner": "Administrator",
@@ -252,6 +341,19 @@
    "report": 1,
    "role": "FlugNinja Website",
    "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FlugNinja Staff",
+   "share": 1,
+   "submit": 1,
+   "write": 1
   }
  ],
  "quick_entry": 1,

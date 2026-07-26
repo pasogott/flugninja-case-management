@@ -150,11 +150,7 @@ app_include_css = "/assets/flugninja_case_management/css/custom_page.css"
 # 		"on_trash": "method"
 # 	}
 # }
-doc_events = {
-    "FlugNinja Submission": {
-        "before_submit": "flugninja_case_management.flugninja_case_management.custom.flugninja_case_management.create_contracts"
-    }
-}
+doc_events = {}
 # Scheduled Tasks
 # ---------------
 # flugninja_case_management.flugninja_case_management.custom.custom_jobs.check_and_expire_contract_urls
@@ -167,7 +163,9 @@ scheduler_events = {
     
     "hourly": [
         "flugninja_case_management.flugninja_case_management.custom.custom_jobs.check_and_expire_contract_urls",
-        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.send_contract_reminders"
+        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.send_contract_reminders",
+        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.send_payout_completion_notifications",
+        "flugninja_case_management.flugninja_case_management.custom.custom_jobs.send_review_request_emails",
     ],
 # 	"all": [
 # 		"flugninja_case_management.tasks.all"
@@ -261,4 +259,3 @@ scheduler_events = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-

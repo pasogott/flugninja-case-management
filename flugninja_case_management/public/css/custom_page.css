@@ -1,4 +1,4 @@
-body[data-path="contract-details"] {
+body {
   background:
     radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 28%),
     radial-gradient(circle at top right, rgba(59, 130, 246, 0.16), transparent 26%),
@@ -6,28 +6,28 @@ body[data-path="contract-details"] {
   color: #0f172a;
 }
 
-body[data-path="contract-details"] .navbar,
-body[data-path="contract-details"] .web-footer,
-body[data-path="contract-details"] .page-footer,
-body[data-path="contract-details"] .page-header-wrapper,
-body[data-path="contract-details"] .web-footer-menu,
-body[data-path="contract-details"] header {
+.navbar,
+.web-footer,
+.page-footer,
+.page-header-wrapper,
+.web-footer-menu,
+header {
   display: none !important;
 }
 
-body[data-path="contract-details"] main {
+main {
   padding: 0;
 }
 
-body[data-path="contract-details"] .page_content,
-body[data-path="contract-details"] .webpage-content,
-body[data-path="contract-details"] .web-page-content {
+.page_content,
+.webpage-content,
+.web-page-content {
   max-width: none;
   padding: 0;
   margin: 0;
 }
 
-body[data-path="contract-details"] .web-page-content {
+.web-page-content {
   text-align: initial !important;
 }
 
@@ -42,11 +42,8 @@ body[data-path="contract-details"] .web-page-content {
   overflow: hidden;
   padding: 28px;
   border-radius: 28px;
-  background:
-    radial-gradient(circle at top right, rgba(147, 197, 253, 0.38), transparent 26%),
-    radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.18), transparent 30%),
-    linear-gradient(135deg, #071738 0%, #0a2662 55%, #123b93 100%);
-  color: #eff6ff;
+  background: linear-gradient(135deg, #071738 0%, #0a2662 55%, #123b93 100%) !important;
+  color: #eff6ff !important;
   box-shadow: 0 28px 70px rgba(10, 38, 98, 0.26);
 }
 
@@ -58,11 +55,11 @@ body[data-path="contract-details"] .web-page-content {
   margin-bottom: 34px;
 }
 
-.contract-logo {
-  width: 174px;
-  max-width: 100%;
-  height: auto;
-  filter: brightness(0) invert(1);
+.contract-wordmark {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: #ffffff;
 }
 
 .contract-brand-meta {
@@ -512,4 +509,25 @@ body[data-path="contract-details"] .web-page-content {
   .contract-canvas {
     height: 180px;
   }
+}
+
+.contract-page-hero h1,
+.contract-page-hero .contract-hero-copy,
+.contract-page-hero .contract-kicker,
+.contract-page-hero .contract-meta-pill,
+.contract-page-hero .contract-hero-point strong,
+.contract-page-hero .contract-hero-point span,
+.contract-page-hero .contract-support-card h2,
+.contract-page-hero .contract-support-card p,
+.contract-page-hero .contract-support-reference p,
+.contract-page-hero .contract-support-link {
+  color: #eff6ff !important;
+}
+
+.contract-page-hero .contract-meta-pill,
+.contract-page-hero .contract-kicker,
+.contract-page-hero .contract-hero-point,
+.contract-page-hero .contract-support-card {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(191, 219, 254, 0.18) !important;
 }

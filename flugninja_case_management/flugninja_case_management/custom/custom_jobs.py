@@ -1,115 +1,94 @@
 import frappe
-from frappe.utils import now_datetime, get_datetime
-from datetime import datetime
-from datetime import datetime
-from frappe.utils import now_datetime, add_to_date
+from frappe.utils import add_to_date, get_datetime, now_datetime
+from flugninja_case_management.flugninja_case_management.custom.flugninja_case_management import (
+    maybe_send_payout_completed_email,
+    maybe_send_review_request_email,
+)
+
+
 def check_and_expire_contract_urls():
-    """
-    Hourly job to check and expire contract URLs
-    Checks if current datetime >= custom_expires_at
-    If yes, sets custom_url_expired = 1
-    """
     try:
         current_datetime = now_datetime()
-        
-        # Fetch all contracts where:
-        # 1. custom_url_expired = 0 (not expired yet)
-        # 2. custom_expires_at is set
         contracts = frappe.get_all(
             "Contract",
             filters={
                 "custom_url_expired": 0,
-                "custom_expires_at": ["is", "set"]
+                "custom_contract_type": "Assignment",
+                "custom_expires_at": ["is", "set"],
             },
-            fields=["name", "custom_expires_at", "custom_sign_token"]
+            fields=["name", "custom_expires_at"],
         )
-        
+
         expired_count = 0
-        
         for contract in contracts:
-            if contract.get("custom_expires_at"):
-                expires_at = get_datetime(contract.custom_expires_at)
-                
-                # Check if current datetime >= expires_at
-                if current_datetime >= expires_at:
-                    # Update the contract to mark URL as expired
-                    frappe.db.set_value(
-                        "Contract",
-                        contract.name,
-                        "custom_url_expired",
-                        1,
-                        update_modified=True
-                    )
-                    expired_count += 1
-                    
-                    frappe.logger().info(
-                        f"Contract {contract.name} URL expired at {expires_at}"
-                    )
-        
-        # Commit the changes
-        frappe.db.commit()
-        
-        if expired_count > 0:
-            frappe.logger().info(
-                f"Expired {expired_count} contract URL(s) in this run"
-            )
-        
+            expires_at = contract.get("custom_expires_at")
+            if not expires_at:
+                continue
+
+            if current_datetime >= get_datetime(expires_at):
+                frappe.db.set_value(
+                    "Contract",
+                    contract.name,
+                    "custom_url_expired",
+                    1,
+                    update_modified=True,
+                )
+                expired_count += 1
+
+        if expired_count:
+            frappe.db.commit()
+            frappe.logger().info(f"Expired {expired_count} contract URL(s) in this run")
+
         return {
             "status": "success",
             "expired_count": expired_count,
-            "checked_at": current_datetime
+            "checked_at": current_datetime,
         }
-        
-    except Exception as e:
-        frappe.log_error(
-            message=str(e),
-            title="Contract URL Expiry Job Failed"
-        )
-        return {
-            "status": "failed",
-            "error": str(e)
-        }
-      
- 
-        
-# @frappe.whitelist(allow_guest=True)
+    except Exception as error:
+        frappe.log_error(message=str(error), title="Contract URL Expiry Job Failed")
+        return {"status": "failed", "error": str(error)}
+
+
 def send_contract_reminders():
     now = now_datetime()
     expiry_threshold = add_to_date(now, hours=24)
-
-    # CORRECT FILTERS
-    filters = {
-        "custom_expires_at": [">=", now],                    # Must be in future or now
-        "custom_expires_at": ["<=", expiry_threshold],       # Within next 24 hours
-        "status": "Unsigned",
-        "custom_reminder_sent": 0                            # Int 0, not 0.0
-    }
+    filters = [
+        ["custom_contract_type", "=", "Assignment"],
+        ["custom_expires_at", ">=", now],
+        ["custom_expires_at", "<=", expiry_threshold],
+        ["status", "=", "Unsigned"],
+        ["custom_reminder_sent", "=", 0],
+        ["custom_url_expired", "=", 0],
+    ]
 
     contracts = frappe.get_all(
         "Contract",
         filters=filters,
         fields=[
-            "name", "custom_sign_url", "custom_expires_at",
-            "custom_flugninja_reference", "custom_contract_type"
+            "name",
+            "custom_sign_url",
+            "custom_expires_at",
+            "custom_flugninja_reference",
+            "custom_contract_type",
         ],
-        debug=True
     )
 
-    frappe.log_error(f"Found {len(contracts)} contracts for reminder", "Debug Reminder")
-
+    sent_count = 0
     for contract in contracts:
         try:
             send_reminder_email(contract)
             frappe.db.set_value("Contract", contract.name, "custom_reminder_sent", 1)
-            frappe.db.commit()
-        except Exception as e:
-            frappe.log_error(f"Failed for {contract.name}: {str(e)}", "Reminder Error")
+            sent_count += 1
+        except Exception as error:
+            frappe.log_error(f"Failed for {contract.name}: {str(error)}", "Reminder Error")
+
+    if sent_count:
+        frappe.db.commit()
+
+    return {"status": "success", "sent_count": sent_count}
 
 
 def send_reminder_email(contract):
-    """
-    Send reminder email using FlugNinja submission and representative
-    """
     if not contract.custom_flugninja_reference:
         return
 
@@ -128,29 +107,64 @@ def send_reminder_email(contract):
         frappe.log_error("Email Template 'Reminder for Contract' not found")
         return
 
-    # Format expiry time
     expires_at_str = frappe.utils.format_datetime(contract.custom_expires_at, "dd.MM.yyyy HH:mm")
-
-    # Render template
     email_content = frappe.render_template(
         email_template.response_html,
         {
             "doc": submission,
             "contract": contract,
-            "representative_full_name": representative.name,
+            "representative_full_name": " ".join(
+                part for part in [representative.firstname or "", representative.lastname or ""] if part
+            ).strip() or representative.email,
             "sign_url": contract.custom_sign_url or "",
             "contract_type": contract.custom_contract_type or "",
-            "expires_at": expires_at_str
-        }
+            "expires_at": expires_at_str,
+        },
     )
 
-    # Send email
     frappe.sendmail(
         recipients=representative.email,
         subject=email_template.subject,
         message=email_content,
-        delayed=False
+        delayed=False,
     )
 
 
+def send_payout_completion_notifications():
+    sent_count = 0
+    for submission_name in frappe.get_all(
+        "FlugNinja Submission",
+        filters={"payout_status": "paid"},
+        pluck="name",
+    ):
+        try:
+            submission = frappe.get_doc("FlugNinja Submission", submission_name)
+            if maybe_send_payout_completed_email(submission):
+                sent_count += 1
+        except Exception as error:
+            frappe.log_error(f"Failed for {submission_name}: {str(error)}", "Payout Email Error")
 
+    if sent_count:
+        frappe.db.commit()
+
+    return {"status": "success", "sent_count": sent_count}
+
+
+def send_review_request_emails():
+    sent_count = 0
+    for submission_name in frappe.get_all(
+        "FlugNinja Submission",
+        filters={"payout_status": "paid"},
+        pluck="name",
+    ):
+        try:
+            submission = frappe.get_doc("FlugNinja Submission", submission_name)
+            if maybe_send_review_request_email(submission):
+                sent_count += 1
+        except Exception as error:
+            frappe.log_error(f"Failed for {submission_name}: {str(error)}", "Review Email Error")
+
+    if sent_count:
+        frappe.db.commit()
+
+    return {"status": "success", "sent_count": sent_count}
